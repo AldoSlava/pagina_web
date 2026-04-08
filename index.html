@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS — Tech Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0D0D0D;
+    --bg2: #111111;
+    --bg3: #161616;
+    --card: #1A1A1A;
+    --card2: #1F1F1F;
+    --border: rgba(0,255,255,0.12);
+    --border2: rgba(0,255,255,0.25);
+    --neon-cyan: #00FFFF;
+    --neon-magenta: #FF00FF;
+    --neon-green: #00FF88;
+    --neon-yellow: #FFE500;
+    --text: #EDEDED;
+    --text-muted: #888;
+    --text-dim: #555;
+    --accent: #00FFFF;
+    --radius: 6px;
+    --radius-lg: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Fira Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Scanlines overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(13,13,13,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 18px rgba(0,255,255,0.5);
+    text-decoration: none;
+  }
+
+  .logo span { color: var(--neon-magenta); }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s, text-shadow 0.2s;
+  }
+
+  .nav-links a:hover {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 10px rgba(0,255,255,0.4);
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .nav-badge {
+    background: var(--neon-cyan);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -8px;
+    right: 8px;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .btn-nav {
+    background: transparent;
+    border: 1px solid var(--border2);
+    color: var(--neon-cyan);
+    padding: 0.45rem 1.1rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .btn-nav:hover {
+    background: rgba(0,255,255,0.08);
+    box-shadow: 0 0 12px rgba(0,255,255,0.2);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 92vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 2rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 70% 50%, rgba(0,255,255,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(255,0,255,0.05) 0%, transparent 70%),
+      linear-gradient(135deg, #0D0D0D 0%, #0a0f12 100%);
+  }
+
+  /* Grid lines */
+  .hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,255,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 640px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,255,255,0.08);
+    border: 1px solid var(--border2);
+    border-radius: 100px;
+    padding: 0.3rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--neon-cyan);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    box-shadow: 0 0 6px var(--neon-green);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-family: 'Fira Code', monospace;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 .line1 { color: var(--text); display: block; }
+  .hero h1 .line2 {
+    color: var(--neon-cyan);
+    display: block;
+    text-shadow: 0 0 30px rgba(0,255,255,0.4);
+  }
+  .hero h1 .line3 { color: var(--text-muted); display: block; font-size: 0.55em; font-weight: 400; letter-spacing: 0.05em; }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--neon-cyan);
+    color: #000;
+    border: none;
+    padding: 0.85rem 2rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: box-shadow 0.25s, transform 0.15s;
+    font-family: 'Fira Code', monospace;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 0 24px rgba(0,255,255,0.5), 0 4px 20px rgba(0,0,0,0.4);
+    transform: translateY(-2px);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border2);
+    padding: 0.85rem 2rem;
+    border-radius: var(--radius);
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    font-family: 'Fira Code', monospace;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    background: rgba(0,255,255,0.05);
+  }
+
+  .hero-stats {
+    position: absolute;
+    right: 2rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    z-index: 2;
+  }
+
+  .stat-card {
+    background: rgba(26,26,26,0.9);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.2rem 1.5rem;
+    text-align: center;
+    backdrop-filter: blur(8px);
+    min-width: 130px;
+  }
+
+  .stat-card .val {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 15px rgba(0,255,255,0.4);
+    display: block;
+  }
+
+  .stat-card .lbl {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  /* ── TICKER ── */
+  .ticker {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.65rem 0;
+    overflow: hidden;
+  }
+
+  .ticker-inner {
+    display: flex;
+    gap: 3rem;
+    animation: ticker 20s linear infinite;
+    white-space: nowrap;
+  }
+
+  @keyframes ticker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .ticker-item {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .ticker-item.up { color: var(--neon-green); }
+  .ticker-item.down { color: #FF4444; }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 5rem 2rem;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    margin-bottom: 3rem;
+  }
+
+  .section-tag {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.72rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .section-header h2 {
+    font-family: 'Fira Code', monospace;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .section-header p {
+    color: var(--text-muted);
+    margin-top: 0.75rem;
+    font-size: 1rem;
+  }
+
+  /* ── CATEGORIES ── */
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .cat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    text-decoration: none;
+  }
+
+  .cat-card:hover {
+    border-color: var(--neon-cyan);
+    background: rgba(0,255,255,0.04);
+    transform: translateY(-3px);
+  }
+
+  .cat-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,255,255,0.08);
+    border-radius: var(--radius);
+  }
+
+  .cat-icon svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--neon-cyan);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .cat-card h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .cat-card p {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* ── PRODUCTS ── */
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: border-color 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: pointer;
+    position: relative;
+  }
+
+  .product-card:hover {
+    border-color: rgba(0,255,255,0.35);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,255,255,0.1);
+  }
+
+  .product-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    z-index: 2;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+  }
+
+  .badge-new { background: var(--neon-cyan); color: #000; }
+  .badge-hot { background: var(--neon-magenta); color: #000; }
+  .badge-sale { background: var(--neon-yellow); color: #000; }
+  .badge-limited { background: rgba(255,68,68,0.9); color: #fff; }
+
+  .product-img {
+    width: 100%;
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #111 0%, #1a1a1a 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .product-img::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(0,255,255,0.05) 0%, transparent 70%);
+  }
+
+  .product-img svg {
+    width: 80px;
+    height: 80px;
+    opacity: 0.6;
+  }
+
+  .product-info {
+    padding: 1.25rem;
+  }
+
+  .product-brand {
+    font-size: 0.7rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-family: 'Fira Code', monospace;
+    margin-bottom: 0.35rem;
+  }
+
+  .product-name {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .product-spec {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .product-price {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .product-price .old {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    text-decoration: line-through;
+    display: block;
+    font-weight: 400;
+  }
+
+  .product-price .discount {
+    font-size: 0.72rem;
+    color: var(--neon-green);
+    margin-left: 0.4rem;
+  }
+
+  .btn-cart {
+    background: rgba(0,255,255,0.1);
+    border: 1px solid var(--border2);
+    color: var(--neon-cyan);
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius);
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, box-shadow 0.2s;
+    font-family: 'Fira Code', monospace;
+    white-space: nowrap;
+  }
+
+  .btn-cart:hover {
+    background: rgba(0,255,255,0.2);
+    box-shadow: 0 0 12px rgba(0,255,255,0.25);
+  }
+
+  /* Stars */
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 0.75rem;
+  }
+
+  .stars {
+    display: flex;
+    gap: 2px;
+  }
+
+  .star {
+    width: 10px;
+    height: 10px;
+    background: var(--neon-yellow);
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  }
+
+  .star.empty { background: var(--bg3); }
+
+  .rating-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* ── FEATURED ── */
+  .featured-section {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 5rem 2rem;
+  }
+
+  .featured-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .featured-visual {
+    background: linear-gradient(135deg, #111 0%, #0a1212 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .featured-visual::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(0,255,255,0.08) 0%, transparent 65%);
+  }
+
+  .featured-visual svg {
+    width: 160px;
+    height: 160px;
+    opacity: 0.5;
+    position: relative;
+    z-index: 1;
+  }
+
+  .featured-label {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    background: rgba(0,0,0,0.7);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.75rem 1rem;
+    backdrop-filter: blur(8px);
+  }
+
+  .featured-label .sku {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    color: var(--neon-cyan);
+    letter-spacing: 0.2em;
+    margin-bottom: 0.25rem;
+  }
+
+  .featured-label .name {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .featured-content h2 {
+    font-family: 'Fira Code', monospace;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 1rem;
+  }
+
+  .featured-content h2 span {
+    color: var(--neon-cyan);
+    text-shadow: 0 0 20px rgba(0,255,255,0.3);
+  }
+
+  .featured-content p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    line-height: 1.7;
+  }
+
+  .spec-list {
+    list-style: none;
+    margin-bottom: 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+
+  .spec-list li {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .spec-list li::before {
+    content: '▹';
+    color: var(--neon-cyan);
+    font-size: 0.7rem;
+  }
+
+  .featured-price {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .featured-price .current {
+    font-family: 'Fira Code', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .featured-price .original {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.1rem;
+    color: var(--text-dim);
+    text-decoration: line-through;
+  }
+
+  .featured-price .save {
+    background: rgba(0,255,136,0.12);
+    border: 1px solid rgba(0,255,136,0.3);
+    color: var(--neon-green);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'Fira Code', monospace;
+  }
+
+  /* ── OFFERS GRID ── */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+
+  .offer-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .offer-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+  }
+
+  .offer-card.cyan::before { background: var(--neon-cyan); }
+  .offer-card.magenta::before { background: var(--neon-magenta); }
+  .offer-card.green::before { background: var(--neon-green); }
+
+  .offer-pct {
+    font-family: 'Fira Code', monospace;
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .offer-card.cyan .offer-pct { color: var(--neon-cyan); }
+  .offer-card.magenta .offer-pct { color: var(--neon-magenta); }
+  .offer-card.green .offer-pct { color: var(--neon-green); }
+
+  .offer-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .offer-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+
+  .offer-code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px dashed rgba(255,255,255,0.15);
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    color: var(--text-muted);
+    display: inline-block;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── NEWSLETTER ── */
+  .newsletter {
+    background: linear-gradient(135deg, rgba(0,255,255,0.04) 0%, rgba(255,0,255,0.03) 100%);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin: 5rem auto;
+    max-width: 700px;
+  }
+
+  .newsletter::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+  }
+
+  .newsletter h3 {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.75rem;
+  }
+
+  .newsletter p {
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+  }
+
+  .newsletter-form {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 460px;
+    margin: 0 auto;
+  }
+
+  .newsletter-form input {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 0.8rem 1.2rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    font-family: 'Fira Sans', sans-serif;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .newsletter-form input::placeholder { color: var(--text-dim); }
+
+  .newsletter-form input:focus {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 10px rgba(0,255,255,0.15);
+  }
+
+  /* ── FEATURES ── */
+  .features-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 0;
+    margin: 4rem auto;
+    max-width: 1280px;
+  }
+
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0 1rem;
+  }
+
+  .feature-item + .feature-item {
+    border-left: 1px solid var(--border);
+  }
+
+  .feature-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .feature-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--neon-cyan);
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .feature-text h4 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 0.2rem;
+  }
+
+  .feature-text p {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 4rem 2rem 2rem;
+  }
+
+  .footer-grid {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand .logo {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+  }
+
+  .footer-brand p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  .footer-col h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+    font-family: 'Fira Code', monospace;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col ul li { margin-bottom: 0.5rem; }
+
+  .footer-col ul li a {
+    font-size: 0.875rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-col ul li a:hover { color: var(--neon-cyan); }
+
+  .footer-bottom {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-bottom p {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    font-family: 'Fira Code', monospace;
+  }
+
+  .footer-bottom p span { color: var(--neon-cyan); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero-stats { display: none; }
+    .featured-inner { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .offers-grid { grid-template-columns: 1fr 1fr; }
+    .features-row { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 0 1rem; }
+    .nav-links { display: none; }
+    .hero { padding: 3rem 1rem; min-height: 80vh; }
+    section { padding: 3rem 1rem; }
+    .offers-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .features-row { grid-template-columns: 1fr 1fr; padding: 2rem 1rem; }
+    .feature-item + .feature-item { border-left: none; border-top: 1px solid var(--border); padding-top: 1rem; }
+    .newsletter-form { flex-direction: column; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    .products-grid { grid-template-columns: 1fr; }
+    .categories { grid-template-columns: repeat(2, 1fr); }
+    .features-row { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="logo">NEX<span>US</span></a>
+  <ul class="nav-links">
+    <li><a href="#">Productos</a></li>
+    <li><a href="#">Marcas</a></li>
+    <li><a href="#">Ofertas</a></li>
+    <li><a href="#">Soporte</a></li>
+  </ul>
+  <div class="nav-right">
+    <div style="position: relative; cursor: pointer;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+    </div>
+    <div style="position: relative; cursor: pointer;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+      </svg>
+      <span class="nav-badge">3</span>
+    </div>
+    <button class="btn-nav">Ingresar</button>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span class="ticker-item up">RTX 5090 ▲ $2,499</span>
+    <span class="ticker-item">Ryzen 9 9950X — $649</span>
+    <span class="ticker-item down">DDR5 32GB ▼ $89</span>
+    <span class="ticker-item up">M4 Pro MacBook ▲ Stock limitado</span>
+    <span class="ticker-item">Samsung 990 Pro 2TB — $149</span>
+    <span class="ticker-item up">ASUS ROG Ally X ▲ $799</span>
+    <span class="ticker-item down">AirPods Pro 3 ▼ $199</span>
+    <span class="ticker-item">PS5 Pro — $699</span>
+    <!-- repeat -->
+    <span class="ticker-item up">RTX 5090 ▲ $2,499</span>
+    <span class="ticker-item">Ryzen 9 9950X — $649</span>
+    <span class="ticker-item down">DDR5 32GB ▼ $89</span>
+    <span class="ticker-item up">M4 Pro MacBook ▲ Stock limitado</span>
+    <span class="ticker-item">Samsung 990 Pro 2TB — $149</span>
+    <span class="ticker-item up">ASUS ROG Ally X ▲ $799</span>
+    <span class="ticker-item down">AirPods Pro 3 ▼ $199</span>
+    <span class="ticker-item">PS5 Pro — $699</span>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">Colección 2025 disponible</div>
+    <h1>
+      <span class="line1">El Futuro</span>
+      <span class="line2">en tus manos.</span>
+      <span class="line3">// Hardware. Periféricos. Componentes. /</span>
+    </h1>
+    <p>La tienda tech más avanzada del mercado. Equipate con el hardware más reciente, los mejores precios y envío en 24h.</p>
+    <div class="hero-actions">
+      <a href="#productos" class="btn-primary">Explorar productos</a>
+      <a href="#ofertas" class="btn-secondary">Ver ofertas</a>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="hero-stats">
+    <div class="stat-card">
+      <span class="val">12K+</span>
+      <span class="lbl">Productos</span>
+    </div>
+    <div class="stat-card">
+      <span class="val">98%</span>
+      <span class="lbl">Satisfacción</span>
+    </div>
+    <div class="stat-card">
+      <span class="val">24h</span>
+      <span class="lbl">Envío</span>
+    </div>
+    <div class="stat-card">
+      <span class="val">150+</span>
+      <span class="lbl">Marcas</span>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES ROW -->
+<div class="features-row">
+  <div class="feature-item">
+    <div class="feature-icon">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5v14"/><rect x="2" y="7" width="6" height="10" rx="1"/><rect x="16" y="7" width="6" height="10" rx="1"/></svg>
+    </div>
+    <div class="feature-text">
+      <h4>Envío en 24h</h4>
+      <p>Gratis en pedidos +$49 a todo México</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+    </div>
+    <div class="feature-text">
+      <h4>Garantía oficial</h4>
+      <p>Todos los productos con garantía de fábrica</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+    </div>
+    <div class="feature-text">
+      <h4>30 días devolución</h4>
+      <p>Sin preguntas, sin complicaciones</p>
+    </div>
+  </div>
+  <div class="feature-item">
+    <div class="feature-icon">
+      <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.72 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.63 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.06 6.06l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    </div>
+    <div class="feature-text">
+      <h4>Soporte 24/7</h4>
+      <p>Asistencia técnica especializada siempre</p>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section>
+  <div class="section-header">
+    <span class="section-tag">// Explora por categoría</span>
+    <h2>¿Qué estás buscando?</h2>
+  </div>
+  <div class="categories">
+    <!-- GPU -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 6V4M10 6V4M14 6V4M18 6V4M6 18v2M10 18v2M14 18v2M18 18v2"/></svg>
+      </div>
+      <h3>Tarjetas GPU</h3>
+      <p>342 productos</p>
+    </a>
+    <!-- CPU -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>
+      </div>
+      <h3>Procesadores</h3>
+      <p>189 productos</p>
+    </a>
+    <!-- RAM -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="1"/><path d="M6 8V6M10 8V6M14 8V6M18 8V6M6 16v2M10 16v2M14 16v2M18 16v2"/></svg>
+      </div>
+      <h3>Memoria RAM</h3>
+      <p>245 productos</p>
+    </a>
+    <!-- SSD -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><circle cx="17" cy="12" r="2"/><line x1="6" y1="9" x2="11" y2="9"/><line x1="6" y1="12" x2="11" y2="12"/><line x1="6" y1="15" x2="11" y2="15"/></svg>
+      </div>
+      <h3>Almacenamiento</h3>
+      <p>410 productos</p>
+    </a>
+    <!-- Monitor -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      </div>
+      <h3>Monitores</h3>
+      <p>178 productos</p>
+    </a>
+    <!-- Periféricos -->
+    <a href="#" class="cat-card">
+      <div class="cat-icon">
+        <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="7"/><line x1="12" y1="6" x2="12" y2="10"/></svg>
+      </div>
+      <h3>Periféricos</h3>
+      <p>623 productos</p>
+    </a>
+  </div>
+</section>
+
+<!-- PRODUCTOS DESTACADOS -->
+<section id="productos">
+  <div class="section-header">
+    <span class="section-tag">// Más vendidos esta semana</span>
+    <h2>Productos destacados</h2>
+    <p>Hardware de última generación seleccionado por nuestro equipo.</p>
+  </div>
+  <div class="products-grid">
+
+    <!-- Producto 1 -->
+    <div class="product-card">
+      <span class="product-badge badge-new">Nuevo</span>
+      <div class="product-img">
+        <svg viewBox="0 0 100 100" fill="none" stroke="rgba(0,255,255,0.6)" stroke-width="1.5">
+          <rect x="10" y="30" width="80" height="40" rx="4"/>
+          <rect x="20" y="38" width="60" height="24" rx="2"/>
+          <line x1="15" y1="30" x2="15" y2="20"/><line x1="25" y1="30" x2="25" y2="20"/>
+          <line x1="35" y1="30" x2="35" y2="20"/><line x1="45" y1="30" x2="45" y2="20"/>
+          <line x1="55" y1="30" x2="55" y2="20"/><line x1="65" y1="30" x2="65" y2="20"/>
+          <line x1="75" y1="30" x2="75" y2="20"/><line x1="85" y1="30" x2="85" y2="20"/>
+          <line x1="15" y1="70" x2="15" y2="80"/><line x1="25" y1="70" x2="25" y2="80"/>
+          <line x1="35" y1="70" x2="35" y2="80"/><line x1="45" y1="70" x2="45" y2="80"/>
+          <line x1="55" y1="70" x2="55" y2="80"/><line x1="65" y1="70" x2="65" y2="80"/>
+          <line x1="75" y1="70" x2="75" y2="80"/><line x1="85" y1="70" x2="85" y2="80"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-brand">Corsair</p>
+        <h3 class="product-name">Vengeance DDR5 32GB 6400MHz CL32</h3>
+        <p class="product-spec">Kit 2×16GB · RGB · Intel XMP 3.0</p>
+        <div class="product-rating">
+          <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+          <span class="rating-count">(1,248)</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">
+            <span class="old">$149.99</span>
+            $119.99 <span class="discount">-20%</span>
+          </div>
+          <button class="btn-cart">+ Carrito</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 2 -->
+    <div class="product-card">
+      <span class="product-badge badge-hot">Hot</span>
+      <div class="product-img">
+        <svg viewBox="0 0 100 100" fill="none" stroke="rgba(255,0,255,0.6)" stroke-width="1.5">
+          <rect x="15" y="20" width="70" height="50" rx="4"/>
+          <rect x="25" y="28" width="50" height="30" rx="2"/>
+          <circle cx="68" cy="65" r="6"/>
+          <line x1="25" y1="43" x2="35" y2="43"/>
+          <line x1="25" y1="48" x2="35" y2="48"/>
+          <line x1="25" y1="53" x2="35" y2="53"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-brand">Samsung</p>
+        <h3 class="product-name">990 Pro NVMe SSD 2TB PCIe 4.0</h3>
+        <p class="product-spec">7,450 MB/s lectura · MLC V-NAND</p>
+        <div class="product-rating">
+          <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+          <span class="rating-count">(3,892)</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">$149.99</div>
+          <button class="btn-cart">+ Carrito</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 3 -->
+    <div class="product-card">
+      <span class="product-badge badge-sale">-30%</span>
+      <div class="product-img">
+        <svg viewBox="0 0 100 100" fill="none" stroke="rgba(0,255,136,0.6)" stroke-width="1.5">
+          <rect x="20" y="15" width="60" height="60" rx="4"/>
+          <rect x="30" y="25" width="40" height="40" rx="2"/>
+          <rect x="38" y="33" width="24" height="24" rx="1"/>
+          <line x1="20" y1="35" x2="10" y2="35"/><line x1="20" y1="45" x2="10" y2="45"/>
+          <line x1="20" y1="55" x2="10" y2="55"/><line x1="20" y1="65" x2="10" y2="65"/>
+          <line x1="80" y1="35" x2="90" y2="35"/><line x1="80" y1="45" x2="90" y2="45"/>
+          <line x1="80" y1="55" x2="90" y2="55"/><line x1="80" y1="65" x2="90" y2="65"/>
+          <line x1="35" y1="15" x2="35" y2="5"/><line x1="50" y1="15" x2="50" y2="5"/>
+          <line x1="65" y1="15" x2="65" y2="5"/><line x1="35" y1="75" x2="35" y2="85"/>
+          <line x1="50" y1="75" x2="50" y2="85"/><line x1="65" y1="75" x2="65" y2="85"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-brand">AMD</p>
+        <h3 class="product-name">Ryzen 9 9900X 12-Core 4.4GHz AM5</h3>
+        <p class="product-spec">24 threads · 64MB L3 · 120W TDP</p>
+        <div class="product-rating">
+          <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star empty"></div></div>
+          <span class="rating-count">(976)</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">
+            <span class="old">$549.99</span>
+            $384.99 <span class="discount">-30%</span>
+          </div>
+          <button class="btn-cart">+ Carrito</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Producto 4 -->
+    <div class="product-card">
+      <span class="product-badge badge-limited">Últimas unidades</span>
+      <div class="product-img">
+        <svg viewBox="0 0 100 100" fill="none" stroke="rgba(255,229,0,0.6)" stroke-width="1.5">
+          <rect x="10" y="25" width="80" height="55" rx="4"/>
+          <rect x="18" y="33" width="64" height="38" rx="2"/>
+          <line x1="30" y1="80" x2="25" y2="90"/><line x1="70" y1="80" x2="75" y2="90"/>
+          <line x1="22" y1="90" x2="78" y2="90"/>
+          <line x1="40" y1="25" x2="40" y2="18"/><line x1="60" y1="25" x2="60" y2="18"/>
+          <circle cx="50" cy="87" r="3"/>
+        </svg>
+      </div>
+      <div class="product-info">
+        <p class="product-brand">ASUS ROG</p>
+        <h3 class="product-name">Swift Pro PG248QP 540Hz 24.1"</h3>
+        <p class="product-spec">1080p · 0.2ms GtG · G-Sync · IPS</p>
+        <div class="product-rating">
+          <div class="stars"><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div><div class="star"></div></div>
+          <span class="rating-count">(421)</span>
+        </div>
+        <div class="product-footer">
+          <div class="product-price">$899.99</div>
+          <button class="btn-cart">+ Carrito</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURED PRODUCT -->
+<div class="featured-section">
+  <div class="featured-inner">
+    <div class="featured-visual">
+      <svg viewBox="0 0 200 200" fill="none" stroke="rgba(0,255,255,0.5)" stroke-width="1.5">
+        <rect x="30" y="40" width="140" height="90" rx="6"/>
+        <rect x="45" y="52" width="110" height="62" rx="3"/>
+        <rect x="58" y="64" width="84" height="38" rx="2"/>
+        <line x1="40" y1="40" x2="40" y2="28"/><line x1="56" y1="40" x2="56" y2="28"/>
+        <line x1="72" y1="40" x2="72" y2="28"/><line x1="88" y1="40" x2="88" y2="28"/>
+        <line x1="104" y1="40" x2="104" y2="28"/><line x1="120" y1="40" x2="120" y2="28"/>
+        <line x1="136" y1="40" x2="136" y2="28"/><line x1="152" y1="40" x2="152" y2="28"/>
+        <line x1="40" y1="130" x2="40" y2="142"/><line x1="56" y1="130" x2="56" y2="142"/>
+        <line x1="72" y1="130" x2="72" y2="142"/><line x1="88" y1="130" x2="88" y2="142"/>
+        <line x1="104" y1="130" x2="104" y2="142"/><line x1="120" y1="130" x2="120" y2="142"/>
+        <line x1="136" y1="130" x2="136" y2="142"/><line x1="152" y1="130" x2="152" y2="142"/>
+        <line x1="30" y1="68" x2="16" y2="68"/><line x1="30" y1="82" x2="16" y2="82"/>
+        <line x1="30" y1="96" x2="16" y2="96"/><line x1="30" y1="110" x2="16" y2="110"/>
+        <line x1="170" y1="68" x2="184" y2="68"/><line x1="170" y1="82" x2="184" y2="82"/>
+        <line x1="170" y1="96" x2="184" y2="96"/><line x1="170" y1="110" x2="184" y2="110"/>
+      </svg>
+      <div class="featured-label">
+        <div class="sku">SKU: NX-RTX5090-24G-OC</div>
+        <div class="name">NVIDIA GeForce RTX 5090 — Founders Edition</div>
+      </div>
+    </div>
+
+    <div class="featured-content">
+      <span class="section-tag">// Producto del mes</span>
+      <h2>NVIDIA RTX <span>5090</span><br>Founders Edition</h2>
+      <p>La GPU más potente jamás fabricada. Arquitectura Blackwell de próxima generación con 24GB GDDR7. Diseñada para dominar en 4K, ray tracing y cargas de trabajo de IA.</p>
+      <ul class="spec-list">
+        <li>24GB GDDR7 @ 28 Gbps</li>
+        <li>Arquitectura Blackwell</li>
+        <li>21,760 CUDA Cores</li>
+        <li>PCIe 5.0 x16</li>
+        <li>DLSS 4 MultiFrame</li>
+        <li>Ray Tracing Gen 4</li>
+        <li>TDP: 575W</li>
+        <li>4x DisplayPort 2.1</li>
+      </ul>
+      <div class="featured-price">
+        <span class="current">$2,499.99</span>
+        <span class="original">$2,799.99</span>
+        <span class="save">Ahorra $300</span>
+      </div>
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn-primary">Agregar al carrito</button>
+        <button class="btn-secondary">Ver especificaciones</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OFERTAS -->
+<section id="ofertas">
+  <div class="section-header">
+    <span class="section-tag">// Promociones activas</span>
+    <h2>Ofertas especiales</h2>
+    <p>Descuentos por tiempo limitado en las mejores marcas.</p>
+  </div>
+  <div class="offers-grid">
+    <div class="offer-card cyan">
+      <div class="offer-pct">25%</div>
+      <div class="offer-title">Gaming Week</div>
+      <div class="offer-desc">En toda la línea de periféricos gaming: teclados, ratones, headsets y controladores.</div>
+      <span class="offer-code">GAMING25</span>
+    </div>
+    <div class="offer-card magenta">
+      <div class="offer-pct">15%</div>
+      <div class="offer-title">Build Day</div>
+      <div class="offer-desc">Descuento en CPUs, placas madre y kits de agua. Construye tu PC de ensueño.</div>
+      <span class="offer-code">BUILD15</span>
+    </div>
+    <div class="offer-card green">
+      <div class="offer-pct">2×1</div>
+      <div class="offer-title">Doble RAM</div>
+      <div class="offer-desc">Compra un kit de memoria DDR5 y llévate el segundo a mitad de precio. Selecto.</div>
+      <span class="offer-code">RAM2X1</span>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div style="max-width:1280px;margin:0 auto;padding:0 2rem;">
+  <div class="newsletter">
+    <span class="section-tag" style="display:block;margin-bottom:0.5rem;">// Sistema de alertas</span>
+    <h3>Activa las alertas de precio</h3>
+    <p>Recibe notificaciones cuando baje el precio de tus productos favoritos y accede a ofertas exclusivas antes que nadie.</p>
+    <div class="newsletter-form">
+      <input type="email" placeholder="tu@email.com">
+      <button class="btn-primary" style="white-space:nowrap;">Activar alertas</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="logo">NEX<span>US</span></a>
+      <p>La tienda tech de nueva generación. Hardware de alta gama, envío rápido y soporte especializado disponible 24/7.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Productos</h4>
+      <ul>
+        <li><a href="#">Tarjetas gráficas</a></li>
+        <li><a href="#">Procesadores</a></li>
+        <li><a href="#">Memoria RAM</a></li>
+        <li><a href="#">Almacenamiento</a></li>
+        <li><a href="#">Placas madre</a></li>
+        <li><a href="#">Fuentes de poder</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <ul>
+        <li><a href="#">Sobre nosotros</a></li>
+        <li><a href="#">Trabaja con nosotros</a></li>
+        <li><a href="#">Blog técnico</a></li>
+        <li><a href="#">Afiliados</a></li>
+        <li><a href="#">Prensa</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <ul>
+        <li><a href="#">Centro de ayuda</a></li>
+        <li><a href="#">Rastrear pedido</a></li>
+        <li><a href="#">Devoluciones</a></li>
+        <li><a href="#">Garantías</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 <span>NEXUS</span> Tech Store. Todos los derechos reservados.</p>
+    <p>Construido con <span>UI UX Pro Max</span> skill · Dark Mode OLED · Fira Code / Fira Sans</p>
+  </div>
+</footer>
+
+</body>
+</html>
